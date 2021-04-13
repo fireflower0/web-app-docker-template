@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: db_container
+    restart: always
+    ports:
+      - "6060:5432"
+    environment:
+      POSTGRES_USER: fireflower0
+      POSTGRES_PASSWORD: password
+      PGPASSWORD: password123
+      POSTGRES_DB: example
+      TZ: "Asia/Tokyo"
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - "6061:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: info@fireflower0.info
+      PGADMIN_DEFAULT_PASSWORD: password
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    depends_on:
+      - db
+
+  backend:
+    build: ./backend
+    image: backend
+    container_name: backend_container
+    links:
+      - db
+    ports:
+      - "5050:5050"
+    environment:
+      TZ: "Asia/Tokyo"
+
+  frontend:
+    build: ./frontend
+    image: frontend
+    container_name: frontend_container
+    links:
+      - backend
+    ports:
+      - "80:80"
+    environment:
+      TZ: "Asia/Tokyo"
+
+volumes:
+  db:
+  pgadmin:
