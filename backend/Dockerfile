@@ -22,14 +22,12 @@ RUN apk add --no-cache git build-base automake autoconf curl-dev && \
 # Clack をインストールする
 RUN ros install clack
 
-# DB操作のために mito と sxql をインストールする
-# RUN ros install mito && ros install sxql
+# DB操作用ライブラリなどインストール
+RUN apk add --no-cache postgresql-client postgresql-dev postgresql-contrib && \
+    ros install mito
 
 # .roswellにPATHを通す
 ENV PATH $PATH:/root/.roswell/bin
-
-# Docker に対して｢ 8080 番ポート ｣で待受けするよう指定する
-EXPOSE 5050
 
 # コンテナが起動したときに実行される命令を指定する
 CMD ["clackup", "app.lisp", "--address", "0.0.0.0", "--port", "5050"]
