@@ -21,6 +21,7 @@ RUN apk add --no-cache git build-base automake autoconf curl-dev && \
 
 # Clack をインストールする
 RUN ros install clack
+RUN ros install fukamachi/utopian
 
 # DB操作用ライブラリなどインストール
 RUN apk add --no-cache postgresql-client postgresql-dev postgresql-contrib && \
@@ -30,4 +31,5 @@ RUN apk add --no-cache postgresql-client postgresql-dev postgresql-contrib && \
 ENV PATH $PATH:/root/.roswell/bin
 
 # コンテナが起動したときに実行される命令を指定する
-CMD ["clackup", "app.lisp", "--address", "0.0.0.0", "--port", "5050"]
+# CMD ["clackup", "app.lisp", "--address", "0.0.0.0", "--port", "5050"]
+CMD ["clackup", "-s", "utopian", "app.lisp", "--address", "0.0.0.0", "--port", "5050"]
